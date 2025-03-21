@@ -24,7 +24,7 @@ Kullanıcı: test@test.com, IP:  1.1.1.1
 ```
 
 
-### **2. PRTG Uyumlu Çıktı (prtg_roundcube.sh)**
+### **2. PRTG Uyumlu Çıktı (prtg.sh)**
 
 Eğer PRTG ile uyumlu bir izleme yapmak isterseniz, PRTG formatında çıktı alabilirsiniz. Bunun için `prtg.sh` scripti çalıştırmanız gerekir.  Bu script, oturum verilerini PRTG tarafından okunabilir bir formatta sunar.
 
