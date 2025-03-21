@@ -2,20 +2,27 @@
 
 DB_USER=""
 DB_PASS=""
-DB_NAME="roundcubemail"
-DB_HOST="localhost"
+DB_NAME=""
+DB_HOST=""
 
-# Son 10 dakikada giriş yapan kullanıcıları say
-LOGIN_COUNT=$(mysql -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -N -e "
-SELECT COUNT(DISTINCT ip) 
+echo "Son 10 Dakikadaki Webmail Girişleri:"
+echo "----------------------------------"
+
+mysql -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -N -e "
+SELECT ip, vars 
 FROM session 
 WHERE changed >= NOW() - INTERVAL 10 MINUTE;
-")
+" | while IFS=$'\t' read -r ip vars; do
 
-# Eğer sonuç boşsa veya hata varsa sıfır yap
-if [[ -z "$LOGIN_COUNT" || "$LOGIN_COUNT" -lt 0 ]]; then
-    LOGIN_COUNT=0
-fi
+    # Eğer vars değişkeni base64 ile encode edilmişse, önce çöz
+    decoded_vars=$(echo "$vars" | base64 -d 2>/dev/null)
 
-# PRTG için uygun formatta çıktı ver
-echo "0:$LOGIN_COUNT:$LOGIN_COUNT Adet giriş"
+    # Kullanıcı adını ayıklamak için regex
+    username=$(echo "$decoded_vars" | perl -nle 'print $1 if /username\|s:\d+:"([^"]+)"/')
+
+    if [[ -n "$username" ]]; then
+        echo "Kullanıcı: $username, IP: $ip"
+    else
+        echo "Kullanıcı bilgisi bulunamadı, IP: $ip"
+    fi
+done
