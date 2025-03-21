@@ -2,8 +2,8 @@
 
 DB_USER=""
 DB_PASS=""
-DB_NAME=""
-DB_HOST=""
+DB_NAME="roundcubemail"
+DB_HOST="localhost"
 
 echo "Son 10 Dakikadaki Webmail Girişleri:"
 echo "----------------------------------"
